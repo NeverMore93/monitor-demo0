@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Layout } from 'antd';
 import Headbar from './Head/Headbar';
+
 const { Header, Content, Sider } = Layout;
 
 
