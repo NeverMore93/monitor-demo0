@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Layout } from 'antd';
 import Headbar from './Head/Headbar';
+import Main from './Content/Main';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Sider } = Layout;
 
 
 class App extends Component {
@@ -11,6 +12,7 @@ class App extends Component {
         return (
             <Layout>
                 <Headbar/>
+                <Main/>
             </Layout>
         );
     }
