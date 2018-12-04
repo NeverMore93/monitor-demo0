@@ -20,7 +20,7 @@ class Headbar extends Component {
 
     render() {
         const { date } = this.state;
-        const formattedDate = moment(date).utc().format("YYYY:MM:DD-UTC-hh:mm");
+        const formattedDate = moment(date).utc().format("YYYY.MM.DD hh:mm");
 
         const headerStyle={
             backgroundColor:'#61dafb'
@@ -63,7 +63,8 @@ class Headbar extends Component {
                 <div style={verticalLineStyle}/>
                 <Text style={titleStyle} size='xlarge'>SMAX Health Status Report</Text>
                 <Box style={dateTimeStyle}>
-                    <Text size='medium'>{formattedDate}</Text>
+                    <Text size='medium'>Current Time(UTC): {formattedDate}</Text>
+                    <Text size='medium'>Next Maint(UTC): 2019.02.02 00:00 ~ 02:00</Text>
                 </Box>
 
             </Box>

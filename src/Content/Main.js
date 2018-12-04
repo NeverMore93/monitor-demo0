@@ -15,15 +15,15 @@ class Main extends Component {
             width:'80%'
         };
 
-        const healthItem={
+        const healthItemStyle={
             backgroundColor:'green'
         };
 
-        const unhealthItem={
+        const warningItemStyle={
             backgroundColor:'yellow'
         };
 
-        const errorItem={
+        const errorItemStyle={
             backgroundColor:'red'
         };
 
@@ -35,38 +35,30 @@ class Main extends Component {
             marginTop:'10px'
         };
 
+        const scenario  = ['AppPulse Active','AppPulse Mobile','AppPulse Trace','BSM-Login','Service Portal'];
+        const scenarioHealth  = ['health','warning','health','health','error'];
+
+        const items=scenario.map((item,index)=>{
+            return(
+                <ListItem style={`${scenarioHealth[index]}+ItemStyle`}>
+                    <ListItemText primary={item} secondary={scenarioHealth[index]}/>
+                </ListItem>
+            )
+        });
 
         return (
             <Box>
                 <Box style={leftSideStyle}>
                     <Box>
-                        <Text style={titleStyle} alignSelf='center' truncate={true} textAlign='center'>Farm:Internal Customer Production Farm</Text>
+                        <Text style={titleStyle} alignSelf='center' truncate={true} textAlign='center'>Internal Customer Production Farm</Text>
                         <Text alignSelf='center' textAlign='center'>Current Status: Running</Text>
                         <Text alignSelf='center' textAlign='center'>Availability: 99.9992%</Text>
-                        <Text alignSelf='center' truncate={true} textAlign='center'>Next Maint.(UTC): 2019/02/02 00:00 ~ 02:00</Text>
-
                     </Box>
+
                     <List style={listStyle}>
-                        <ListItem style={healthItem}>
-                            <ListItemText primary="AppPulse Active" secondary="health"/>
-                        </ListItem>
-                        <Divider />
-                        <ListItem style={unhealthItem}>
-                            <ListItemText primary="AppPulse Mobile" secondary="unhealth"/>
-                        </ListItem>
-                        <Divider />
-                        <ListItem style={healthItem}>
-                            <ListItemText primary="AppPulse Trace" secondary="health"/>
-                        </ListItem>
-                        <Divider />
-                        <ListItem style={healthItem}>
-                            <ListItemText primary="BSM-Login" secondary="health"/>
-                        </ListItem>
-                        <Divider />
-                        <ListItem style={errorItem}>
-                            <ListItemText primary="Service Portal" secondary="error"/>
-                        </ListItem>
+                        {items}
                     </List>
+
                 </Box>
                 <Box style={mainStyle}>
                     <DataTable>
