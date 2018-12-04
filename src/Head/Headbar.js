@@ -7,7 +7,7 @@ class Headbar extends Component {
     constructor() {
         super();
         this.state = {
-            date: new Date(),
+            date: new Date()
         };
     }
 
