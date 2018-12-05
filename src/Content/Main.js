@@ -2,54 +2,21 @@ import React, { Component } from 'react';
 import {Box,Text,DataTable} from 'grommet';
 import {List,ListItem,ListItemText,Divider } from '@material-ui/core';
 import moment from 'moment';
+import _ from 'lodash';
 
 
 class Main extends Component {
 
     constructor() {
         super();
-        this.state = {
-            date: new Date()
-        };
-    }
-
-    componentDidMount() {
-        setInterval(
-            () => this.setState({ date: new Date() }),
-            1000
-        );
-    }
-
-    genMetadata=()=>{
-        let tmp={
-            name:"",
-            T:""
-        };
-        for (let i = 1; i <= 12; i++) {
-            tmp[`T-${i*5}`]="";
-        }
-        return tmp;
-    };
-
-    genData=(serviceNames,metadata)=>{
-        let data = [];
-        for(let i=0;i<serviceNames.length;i++){
-            metadata["name"]=serviceNames[i];
-            data.push(metadata);
-        }
-        return data;
-    };
-
-    render() {
-
-        const metadata = this.genMetadata();
 
         const leftSideStyle={
             width:'20%'
         };
 
         const mainStyle={
-            width:'80%'
+            width:'80%',
+            margin:'auto'
         };
         const allStyle={
             healthItemStyle:{
@@ -70,39 +37,63 @@ class Main extends Component {
         const titleStyle={
             marginTop:'10px'
         };
-        const {date}=this.state;
+
+        this.state = {
+            date: new Date(),
+            leftSideStyle:leftSideStyle,
+            mainStyle:mainStyle,
+            allStyle:allStyle,
+            listStyle:listStyle,
+            titleStyle:titleStyle
+        };
+    }
+
+    componentDidMount() {
+
+    }
+
+    genData=(serviceNames)=>{
+        let data = [];
+        for(let i=0;i<serviceNames.length;i++){
+            let tmp = {
+
+            };
+            tmp["name"]=serviceNames[i];
+            tmp["T"]=Math.round(Math.random());
+            for (let i = 1; i <= 12; i++) {
+                tmp[`T_${i*5}`]=Math.round(Math.random());
+            }
+            data.push(tmp);
+        }
+        return data;
+    };
+
+    render() {
+        const {date,leftSideStyle,mainStyle,allStyle,listStyle,titleStyle}=this.state;
         const scenario  = ['AppPulse Active','AppPulse Mobile','AppPulse Trace','BSM-Login','Service Portal'];
         const scenarioHealth  = ['health','warning','health','health','error'];
-        const serviceNames=["service1,service2","service3","service4","service5","service6","service6"];
-
-        const serviceNamesData=this.genMetadata(serviceNames,metadata);
-
+        const serviceNames=["service1","service2","service3","service4","service5","service6","service7"];
+        const serviceNamesData=this.genData(serviceNames);
+        console.log(serviceNamesData);
         const nowTime = moment(date).utc().format("hh:mm");
         const columns = [
             {
                 property: "name",
-                header: <Text>Service Name</Text>,
+                header: <Text truncate={true}>Service</Text>,
                 primary: true,
-                footer: "Total"
             },
             {
                 property: "T",
-                header: <Text>{nowTime}</Text>,
+                header: <Text>{nowTime}</Text>
             }
         ];
 
         for (let i = 1; i <= 12; i++) {
             columns.push({
-                property: `T-${i*5}`,
-                header: <Text>{moment(date).subtract(i*5, 'minutes').utc().format("hh:mm")}</Text>,
+                property: `T_${i*5}`,
+                header: <Text>{moment(date).subtract(i*5, 'minutes').utc().format("hh:mm")}</Text>
             })
         }
-
-
-
-
-
-
 
         const items=scenario.map((item,index)=>{
             return(
@@ -130,7 +121,7 @@ class Main extends Component {
 
                 </Box>
                 <Box style={mainStyle}>
-                    <DataTable columns={columns} data={serviceNamesData} />
+                    <DataTable columns={columns} size="xlarge" resizeable={true} data={serviceNamesData} sortable={true}/>
                 </Box>
             </Box>
         );
