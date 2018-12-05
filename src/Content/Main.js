@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Box,Text} from 'grommet';
 import moment from 'moment';
-import _ from 'lodash';
 import {Table,TableBody,TableCell,TableHead,TableRow,Button,List,ListItem,ListItemText,Divider} from '@material-ui/core';
 
 
@@ -13,7 +12,7 @@ class Main extends Component {
         const leftSideStyle={
             width:'20%'
         };
-
+        const scenarioHealth  = ['health','warning','health','health','error'];
         const mainStyle={
             width:'80%',
             margin:'auto'
@@ -44,12 +43,9 @@ class Main extends Component {
             mainStyle:mainStyle,
             allStyle:allStyle,
             listStyle:listStyle,
-            lableStyle:lableStyle
+            lableStyle:lableStyle,
+            scenarioHealth:scenarioHealth
         };
-    }
-
-    componentDidMount() {
-
     }
 
     createTableHeadCells = () =>{
@@ -84,8 +80,7 @@ class Main extends Component {
     };
 
     createScenarioList=(scenarios)=>{
-        const {allStyle}=this.state;
-        const scenarioHealth  = ['health','warning','health','health','error'];
+        const {allStyle,scenarioHealth}=this.state;
         let scenarioList=[];
         for(let i=0;i<scenarios.length;i++){
             scenarioList.push(
@@ -103,7 +98,6 @@ class Main extends Component {
     render() {
         const {leftSideStyle,mainStyle,listStyle,lableStyle}=this.state;
         const scenarios  = ['AppPulse Active','AppPulse Mobile','AppPulse Trace','BSM-Login','Service Portal'];
-        const scenarioHealth  = ['health','warning','health','health','error'];
         const serviceNames=["service1","service2","service3","service4","service5","service6","service7","node1","node2","node3","node4","node5"];
 
         return (
