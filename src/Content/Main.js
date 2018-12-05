@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {Box,Text,DataTable} from 'grommet';
-import {List,ListItem,ListItemText,Divider } from '@material-ui/core';
+import {Box,Text} from 'grommet';
 import moment from 'moment';
 import _ from 'lodash';
+import {Table,TableBody,TableCell,TableHead,TableRow,Button,List,ListItem,ListItemText,Divider} from '@material-ui/core';
 
 
 class Main extends Component {
@@ -31,11 +31,11 @@ class Main extends Component {
         };
 
         const listStyle={
-            margin:'20px'
+            margin:'auto'
         };
 
-        const titleStyle={
-            marginTop:'10px'
+        const lableStyle={
+            margin:'auto'
         };
 
         this.state = {
@@ -44,7 +44,7 @@ class Main extends Component {
             mainStyle:mainStyle,
             allStyle:allStyle,
             listStyle:listStyle,
-            titleStyle:titleStyle
+            lableStyle:lableStyle
         };
     }
 
@@ -52,76 +52,84 @@ class Main extends Component {
 
     }
 
-    genData=(serviceNames)=>{
-        let data = [];
-        for(let i=0;i<serviceNames.length;i++){
-            let tmp = {
-
-            };
-            tmp["name"]=serviceNames[i];
-            tmp["T"]=Math.round(Math.random());
-            for (let i = 1; i <= 12; i++) {
-                tmp[`T_${i*5}`]=Math.round(Math.random());
-            }
-            data.push(tmp);
+    createTableHeadCells = () =>{
+        const {date}=this.state;
+        let tableHeadCells=[];
+        tableHeadCells.push(<TableCell padding="none"><Text>Service Name</Text></TableCell>);
+        for(let i=0;i<7;i++){
+            tableHeadCells.push(<TableCell style={{width:"100px"}}><Text>{moment(date).subtract(i,'day').utc().format("DD/MM")}</Text></TableCell>)
         }
-        return data;
+        return tableHeadCells;
     };
 
-    render() {
-        const {date,leftSideStyle,mainStyle,allStyle,listStyle,titleStyle}=this.state;
-        const scenario  = ['AppPulse Active','AppPulse Mobile','AppPulse Trace','BSM-Login','Service Portal'];
-        const scenarioHealth  = ['health','warning','health','health','error'];
-        const serviceNames=["service1","service2","service3","service4","service5","service6","service7"];
-        const serviceNamesData=this.genData(serviceNames);
-        console.log(serviceNamesData);
-        const nowTime = moment(date).utc().format("hh:mm");
-        const columns = [
-            {
-                property: "name",
-                header: <Text truncate={true}>Service</Text>,
-                primary: true,
-            },
-            {
-                property: "T",
-                header: <Text>{nowTime}</Text>
-            }
-        ];
-
-        for (let i = 1; i <= 12; i++) {
-            columns.push({
-                property: `T_${i*5}`,
-                header: <Text>{moment(date).subtract(i*5, 'minutes').utc().format("hh:mm")}</Text>
-            })
+    createTableBodyRows=(serviceNames)=>{
+        let tableBodyRows=[];
+        for(let i=0;i<serviceNames.length;i++){
+            tableBodyRows.push(<TableRow rowKey={i}>{this.createTableBodyCells(serviceNames[i])}</TableRow>)
         }
+        return tableBodyRows;
+    };
 
-        const items=scenario.map((item,index)=>{
-            return(
-                <Box>
-                    <ListItem style={allStyle[`${scenarioHealth[index]}ItemStyle`]} key={index}>
-                        <ListItemText primary={item} secondary={scenarioHealth[index]}/>
+
+    createTableBodyCells = (serviceName) =>{
+        let tableBodyCells=[];
+        const healthButton=(<Button style={{backgroundColor:"green",width:"60px"}}>Running</Button>);
+        const unHealthButton=(<Button style={{backgroundColor:"red",width:"60px"}}>Error</Button>);
+        const buttons=[healthButton,unHealthButton];
+        tableBodyCells.push(<TableCell style={{width:"100px"}}><Text>{serviceName}</Text></TableCell>);
+        for(let i=0;i<7;i++){
+            tableBodyCells.push(<TableCell index={i} style={{width:"100px"}}>{buttons[Math.round(Math.random())]}</TableCell>)
+        }
+        return tableBodyCells;
+    };
+
+    createScenarioList=(scenarios)=>{
+        const {allStyle}=this.state;
+        const scenarioHealth  = ['health','warning','health','health','error'];
+        let scenarioList=[];
+        for(let i=0;i<scenarios.length;i++){
+            scenarioList.push(
+                <Box style={{margin:"auto"}}>
+                    <ListItem style={allStyle[`${scenarioHealth[i]}ItemStyle`]} key={i}>
+                        <ListItemText primary={scenarios[i]} secondary={scenarioHealth[i]}/>
                     </ListItem>
                     <Divider/>
                 </Box>
             )
-        });
+        }
+        return scenarioList;
+    };
+
+    render() {
+        const {leftSideStyle,mainStyle,listStyle,lableStyle}=this.state;
+        const scenarios  = ['AppPulse Active','AppPulse Mobile','AppPulse Trace','BSM-Login','Service Portal'];
+        const scenarioHealth  = ['health','warning','health','health','error'];
+        const serviceNames=["service1","service2","service3","service4","service5","service6","service7","node1","node2","node3","node4","node5"];
 
         return (
             <Box direction="row">
                 <Box style={leftSideStyle}>
-                    <Box>
-                        <Text style={titleStyle} alignSelf='center' truncate={true} textAlign='center'>Internal Customer Production Farm</Text>
-                        <Text alignSelf='center' textAlign='center'>Current Status: Running</Text>
-                        <Text alignSelf='center' textAlign='center'>Availability: 99.9992%</Text>
+                    <Box style={{margin:"auto"}}>
+                        <Text style={lableStyle} alignSelf='center' truncate={true} textAlign='center'>Internal Customer Production Farm</Text>
+                        <Text style={lableStyle} alignSelf='center' textAlign='center'>Current Status: Running</Text>
+                        <Text style={lableStyle} alignSelf='center' textAlign='center'>Availability: 99.9992%</Text>
                     </Box>
-
                     <List style={listStyle}>
-                        {items}
+                        {this.createScenarioList(scenarios)}
                     </List>
-
                 </Box>
                 <Box style={mainStyle}>
-                    <DataTable columns={columns} size="xlarge" resizeable={true} data={serviceNamesData} sortable={true}/>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                {this.createTableHeadCells()}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.createTableBodyRows(serviceNames)}
+                        </TableBody>
+
+                    </Table>
                 </Box>
             </Box>
         );
